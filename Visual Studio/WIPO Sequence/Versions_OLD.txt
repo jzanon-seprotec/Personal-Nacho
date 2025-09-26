@@ -1,0 +1,8 @@
+1.0.0.0  Initial version
+1.1.0.0  For ZH-TW does not generate squences to be translated. NonEnglishQualifier value not generated. Add version number in form. Message added in log not generate sequences for zh-tw
+1.1.0.1  Added Indonesian language
+1.1.0.2  Takes into accoun if client send a file wiht <ApplicantNameLatin> or <InventorNameLatin> in the source file; in taht case only the lang is changed
+1.1.0.4  When <ApplicantName languageCode="de"> it replaces automatically by "en" and does not stop.
+1.1.0.5  Added Spanish Spain as selectable language
+1.1.0.6  Added these languages de-DE, it-IT, pl-PL, ro-RO
+1.1.0.7  Added these languages bg-bg, cs-cz, el-gr, it-it, lt-lt, pl-pl, ja-jp, pt-pt, ro-ro, sr-rs, sk-sk, tr-tr, et-ee
