@@ -12,6 +12,7 @@ Public Class Form1
     Dim OriginalFileNameNoExt As String
     Dim OriginalPathNoName As String
     Dim NoLatin As Boolean
+    'Reseña
 
     Private Sub ListBox1_DragDrop(sender As Object, e As DragEventArgs) Handles ListBox1.DragDrop
         Dim files() As String = e.Data.GetData(DataFormats.FileDrop)
@@ -22,6 +23,7 @@ Public Class Form1
                 Exit Sub
             End If
 
+            ' NEW
             'Determine if is a prep or post
             'MsgBox(Strings.Left(Strings.Right(path, 15), 9))
             If Strings.Left(Strings.Right(path, 18), 9) = "_Totrans_" Then
