@@ -12,7 +12,7 @@ Public Class Form1
     Dim OriginalFileNameNoExt As String
     Dim OriginalPathNoName As String
     Dim NoLatin As Boolean
-    'Reseña
+    'GGGGGG
 
     Private Sub ListBox1_DragDrop(sender As Object, e As DragEventArgs) Handles ListBox1.DragDrop
         Dim files() As String = e.Data.GetData(DataFormats.FileDrop)
