@@ -11,14 +11,18 @@ def corregir_residues(input_file, output_file):
         if len(tds) == 2 and "Residues" in tds[1].text:
             div = tds[1].find("div", class_="residues")
             if div and div.string:
-                # Guardar texto
+                # Guardar el texto de la secuencia
                 texto = div.string.strip()
-                # Eliminar celda incorrecta
+                # Eliminar la celda original con colspan
                 tds[1].decompose()
-                # Crear nuevas celdas
+                
+                # Crear nueva celda con <b>Residues</b>
                 nueva_td_label = soup.new_tag("td")
-                nueva_td_label.string = "Residues"
+                negrita = soup.new_tag("b")
+                negrita.string = "Residues"
+                nueva_td_label.append(negrita)
 
+                # Crear nueva celda con contenido
                 nueva_td_contenido = soup.new_tag("td")
                 nuevo_div = soup.new_tag("div", attrs={"class": "residues"})
                 nuevo_div.string = texto
@@ -31,10 +35,10 @@ def corregir_residues(input_file, output_file):
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(str(soup))
 
-    print(f"Archivo corregido guardado en: {output_file}")
+    print(f"✅ Archivo corregido guardado en: {output_file}")
 
 # Ejemplo de uso
 if __name__ == "__main__":
-    archivo_entrada = "generated.html"               # Cambia si tienes otro nombre
-    archivo_salida = "generated_column_fixed.html"   # Resultado
+    archivo_entrada = "D:\Borrar_37_XMLyHTML\Borrar\generated.html"               # Cambia si usas otro nombre
+    archivo_salida = "D:\Borrar_37_XMLyHTML\Borrar\generated_column_fixed.html"   # Resultado final
     corregir_residues(archivo_entrada, archivo_salida)
