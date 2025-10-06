@@ -1,0 +1,52 @@
+Windows Registry Editor Version 5.00
+
+; ============================================================
+; === CONFIGURACIÓN PARA .PPF ===
+; Opción "Transit Fix Pack" por defecto (doble clic)
+; Sin icono
+; ============================================================
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.ppf]
+@="TransitFixPackFile"
+"Content Type"="application/x-transitfixpack"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitFixPackFile]
+@="Transit Fix Pack File"
+
+; Define la acción predeterminada como "TransitFixPack"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitFixPackFile\shell]
+@="TransitFixPack"
+
+; Menú contextual y acción por defecto
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitFixPackFile\shell\TransitFixPack]
+@="Transit Fix Pack"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitFixPackFile\shell\TransitFixPack\command]
+@="cmd.exe /c \"C:\\Tools\\TransitFix.bat \\\"%1\\\"\""
+
+; ============================================================
+; === CONFIGURACIÓN PARA .TPF ===
+; Opción "Transit Fix Pack" por defecto (doble clic)
+; Con icono 244 de shell32.dll
+; ============================================================
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\.tpf]
+@="TransitTpfFile"
+"Content Type"="application/x-transittpf"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitTpfFile]
+@="Transit TPF File"
+
+; Define la acción predeterminada como "TransitFixPack"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitTpfFile\shell]
+@="TransitFixPack"
+
+; Icono personalizado
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitTpfFile\DefaultIcon]
+@="C:\\Windows\\System32\\shell32.dll,244"
+
+; Menú contextual + acción predeterminada
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitTpfFile\shell\TransitFixPack]
+@="Transit Fix Pack"
+"Icon"="C:\\Windows\\System32\\shell32.dll,244"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitTpfFile\shell\TransitFixPack\command]
+@="cmd.exe /c \"C:\\Tools\\TransitFix.bat \\\"%1\\\"\""
