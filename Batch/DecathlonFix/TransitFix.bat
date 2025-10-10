@@ -9,19 +9,20 @@ rem set path=%cd%;%path%
 set path="C:\Tools";%path% rem 7zip files must be copied to this path
 
 rem strore variables of path, name, full path,etc
-set "Fullpath=%1"
+set "Fullpath=%~1"
 set "PathOnly=%~dp1"
 set "NameOnly=%~n1"
 set "NameExtOnly=%~nx1"
 set "ExtOnly=%~x1"
 
-rem store the value for English found or French found
+rem strores the value for English found or French found
 set "French="
 set "English="
 
-rem === LOCK FILE SYSTEM ===
-set "LockFile=%Fullpath%.lock"
-if exist "%LockFile%" (
+rem === LOCK (atomic via directory) ===
+set "LockDir=%Fullpath%.lockdir"
+2>nul mkdir "%LockDir%"
+if errorlevel 1 (
     echo ====================================================
     echo [!] Another process is already working on:
     echo     %Fullpath%
@@ -30,7 +31,10 @@ if exist "%LockFile%" (
     pause
     goto EXIT
 )
-echo %DATE% %TIME% > "%LockFile%"
+(
+  echo %DATE% %TIME%
+  echo USER=%USERNAME%  HOST=%COMPUTERNAME%
+) > "%LockDir%\owner.txt"
 rem === END LOCK ===
 
 rem If not a .PPF file Check if TPF file
@@ -38,7 +42,7 @@ if NOT "%ExtOnly%"==".PPF" (
 		goto TPFFILE
 )
 
-rem Create the temp path, if it exists delete it, if not create it
+rem Creamos el path temporal, si ya existe lo borra si no lo crea
 set "TempPATH=%PathOnly%%NameOnly%_TEMP"
 if exist "%TempPATH%" (
     @ECHO Sub folder found. Deleting . . .  
@@ -46,25 +50,25 @@ if exist "%TempPATH%" (
 )
 
 rem Extract the files .EN1 and .FR1 to a temp folder; don't care if they are .FR1 or .EN1
-7z e %Fullpath% -o"%TempPATH%" *.FR1 *.EN1
+7z e "%Fullpath%" -o"%TempPATH%" *.FR1 *.EN1
 
 REM wait 3 seconds
 timeout /t 3 /nobreak >nul 
 
 rem Renames the files in zip
 FOR %%f in ("%TempPATH%"\*) DO (
-if "%%~xf" == ".FR1" 7z rn %Fullpath% "%%~nxf" "%%~nf".FRA & set "French=y"
-if "%%~xf" == ".EN1" 7z rn %Fullpath% "%%~nxf" "%%~nf".ENG & set "English=y"
+if "%%~xf" == ".FR1" 7z rn "%Fullpath%" "%%~nxf" "%%~nf".FRA & set "French=y"
+if "%%~xf" == ".EN1" 7z rn "%Fullpath%" "%%~nxf" "%%~nf".ENG & set "English=y"
 )
 
-rem check if some language has been found if not exit
+rem chech if some language has been found if not exit
 if "%French%"=="" if "%English%"=="" goto NOTAPPLICABLE
 
 rem Remove all files in temp folder in silent mode
 del /q "%TempPATH%\*.*"
 
-rem Extract the Project file .PPJ to temp folder
-7z e %Fullpath% -o"%TempPATH%" *.PRJ
+rem Extract the Prject file .PPJ to temp folder
+7z e "%Fullpath%" -o"%TempPATH%" *.PRJ
 
 rem Changes the language code in project file .PRJ and project name to take control ProjectName = ProjectName_SEPROFIX
 FOR %%f in ("%TempPATH%"\*) DO (
@@ -76,19 +80,19 @@ fart "%TempPATH%\%%~nxf" SourceLanguage=31756 SourceLanguage=1036
 )
 
 rem updates the .PRJ file in zip 
-7z u %Fullpath% %FullPathNameUP% 
+7z u "%Fullpath%" %FullPathNameUP% 
 
 rem Rename the .PRJ adding _SEPROFIX at the end
-7z rn %Fullpath% "%PRJName%".PRJ "%PRJName%"_SEPROFIX.PRJ
+7z rn "%Fullpath%" "%PRJName%".PRJ "%PRJName%"_SEPROFIX.PRJ
 
 rem renames original zip to _SEPROFIX
-rename %Fullpath% "%NameOnly%_SEPROFIX%ExtOnly%"
+rename "%Fullpath%" "%NameOnly%_SEPROFIX%ExtOnly%"
 
 rem Delete subdir
 RMDIR "%TempPATH%" /S /Q
 
 GOTO EXIT
-REM END OF PPF PROCESSING
+REM FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN FIN 
 
 
 :TPFFILE
@@ -102,8 +106,8 @@ if NOT "%ExtOnly%"==".tpf" (
 rem === NEW: If .tpf but NAME does NOT end with _SEPROFIX -> delete lock, show message and exit ===
 set "NameSinSepro=%NameOnly:_SEPROFIX=%"
 if "%NameSinSepro%"=="%NameOnly%" (
-    rem Remove lock file before exiting since we won't process this file
-    if exist "%LockFile%" del "%LockFile%"
+    rem Remove lock dir before exiting since we won't process this file
+    if exist "%LockDir%" rd /s /q "%LockDir%"
 
     cls
     rem Build expected name with .tpf explicitly
@@ -116,7 +120,7 @@ if "%NameSinSepro%"=="%NameOnly%" (
 )
 rem === END NEW CHECK ===
 
-rem The temp path, if exists delete it, if not 7zip will create it
+rem El path temporal, si ya existe lo borra si no 7zip lo crea
 set "TempPATH=%PathOnly%%NameOnly%_TEMP"
 
 if exist "%TempPATH%" (
@@ -124,10 +128,11 @@ if exist "%TempPATH%" (
     RD /S /Q "%TempPATH%"
 )
 
-rem Extract the Project file .PPJ to temp folder
-7z e %Fullpath% -o"%TempPATH%" *.PRJ
+rem Extract the Prject file .PPJ to temp folder
+7z e "%Fullpath%" -o"%TempPATH%" *.PRJ
 
 rem Changes the language code in project file .PRJ and removes _SEPROFIX in project name: ProjectName = ProjectName_SEPROFIX
+
 FOR %%f in ("%TempPATH%"\*) DO (
 set "NameWithSepro=%%~nf"
 set "FullPathNameUP=%TempPATH%\%%~nxf"
@@ -140,14 +145,14 @@ fart "%FullPathNameUP%" SourceLanguage=2057 SourceLanguage=31753
 fart "%FullPathNameUP%" SourceLanguage=1036 SourceLanguage=31756
 
 rem updates the file in zip
-7z u %Fullpath% "%FullPathNameUP%" 
+7z u "%Fullpath%" "%FullPathNameUP%" 
 
 rem Rename the .PRJ REMOVING _SEPROFIX at the end
-7z rn %Fullpath% "%NameWithSepro%.PRJ" "%NameSinSepro%.PRJ" 
+7z rn "%Fullpath%" "%NameWithSepro%.PRJ" "%NameSinSepro%.PRJ" 
 
 rem renames original zip REMOVING _SEPROFIX
 set NameOnly=%NameOnly:_SEPROFIX=%
-rename %Fullpath% "%NameOnly%%ExtOnly%"
+rename "%Fullpath%" "%NameOnly%%ExtOnly%"
 
 rem Delete subdir
 RMDIR "%TempPATH%" /S /Q
@@ -177,7 +182,7 @@ pause
 
 
 :EXIT
-rem --- REMOVE LOCK FILE IF EXISTS ---
-if exist "%LockFile%" del "%LockFile%"
+rem --- REMOVE LOCK DIR IF EXISTS ---
+if exist "%LockDir%" rd /s /q "%LockDir%"
 rem exit
 endlocal
