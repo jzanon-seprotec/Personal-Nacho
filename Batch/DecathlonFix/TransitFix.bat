@@ -160,6 +160,8 @@ RMDIR "%TempPATH%" /S /Q
 GOTO EXIT
 
 :NOTAPPLICABLE
+rem --- REMOVE LOCK DIR IF EXISTS ---
+if exist "%LockDir%" rd /s /q "%LockDir%"
 cls
 echo[
 echo[
