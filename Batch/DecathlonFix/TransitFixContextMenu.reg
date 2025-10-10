@@ -21,7 +21,7 @@ Windows Registry Editor Version 5.00
 @="Transit Fix Pack"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitFixPackFile\shell\TransitFixPack\command]
-@="cmd.exe /c \"C:\\Tools\\TransitFix.bat \\\"%1\\\"\""
+@="\"C:\\Tools\\TransitFix.bat\" \"%1\""
 
 ; ============================================================
 ; === CONFIGURACIÓN PARA .TPF ===
@@ -49,4 +49,4 @@ Windows Registry Editor Version 5.00
 "Icon"="C:\\Windows\\System32\\shell32.dll,244"
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\TransitTpfFile\shell\TransitFixPack\command]
-@="cmd.exe /c \"C:\\Tools\\TransitFix.bat \\\"%1\\\"\""
+@="\"C:\\Tools\\TransitFix.bat\" \"%1\""
